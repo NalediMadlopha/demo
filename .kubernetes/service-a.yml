@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      service: service-a
+  template:
+    metadata:
+      labels:
+        service: service-a
+    spec:
+      containers:
+        - name: service-a
+          image: naledimadlopha/service-a
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+  labels:
+    app: service-a
+    component: api
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    service: service-a
+  ports:
+    - name: http
+      port: 8181
+      targetPort: 8080
+      nodePort: 30181
